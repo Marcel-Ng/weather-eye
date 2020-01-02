@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Weather Eye</title>
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="My Weather Eye">
+    <meta name="apple-mobile-web-app-title" content="Weather Eye">
+    <meta name="theme-color" content="#FF9800">
+    <meta name="msapplication-navbutton-color" content="#FF9800">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/index.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" sizes="128x128" href="/images/touch/icon-128x128.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="/images/touch/icon-128x128.png">
+    <link rel="icon" sizes="192x192" href="icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/touch/icon-192x192.png">
+    <link rel="icon" sizes="256x256" href="/images/touch/icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="/images/touch/icon-256x256.png">
+    <link rel="icon" sizes="384x384" href="/images/touch/icon-384x384.png">
+    <link rel="apple-touch-icon" sizes="384x384" href="/images/touch/icon-384x384.png">
+    <link rel="icon" sizes="512x512" href="/images/touch/icon-512x512.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/touch/icon-512x512.png">
+</head>
+<body>
+    <header>
+        <h1>My Weather Eye</h1>
+    </header>
+
+    <main>
+        <section id="installBanner" class="banner">
+            <button id="installBtn">Install app</button>
+        </section>
+
+        <section class="location">
+          <h1 class="location-timezone">Africa/Lagos</h1>
+          <canvas class="icon" width="128" height="128"></canvas>
+        </section>
+
+        <section class="weather-condition">
+          <div class="degree-section">
+            <h2 class="temprature-degree">34</h2>
+            <span>F</span>
+          </div>
+
+          <div class="temprature-description">Its so cold</div>
+        </section>
+
+        <a href="../index.html">About</a>
+    </main>
+
+
+       <!-- Register the service worker -->
+   <script>
+
+    if ('serviceWorker' in navigator){
+      window.addEventListener('load', function(){
+        navigator.serviceWorker.register('service-worker.js')
+         .then(reg => {
+           console.log('Service worker registered! ', reg);
+         })
+         .catch(err => {
+           console.log(' Service worker registration failed: ', err);
+         })
+      })
+
+    }  
+   </script>
+
+<script>
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', event => {
+
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      event.preventDefault();
+
+      // Stash the event so it can be triggered later.
+      deferredPrompt = event;
+
+      // Attach the install prompt to a user gesture
+      document.querySelector('#installBtn').addEventListener('click', event => {
+
+        // Show the prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice
+          .then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+            deferredPrompt = null;
+          });
+      });
+
+      // Update UI notify the user they can add to home screen
+      document.querySelector('#installBanner').style.display = 'flex';
+    });
+  </script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/skycons.js"></script>
+</body>
+</html>
