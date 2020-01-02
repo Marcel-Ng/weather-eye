@@ -20,7 +20,8 @@ window.addEventListener('load', ()=>{
         navigator.geolocation.getCurrentPosition(position =>{
             long = position.coords.longitude;
             lat = position.coords.latitude;
-            const proxy = 'http://cors-anywhere.herokuapp.com/';
+            let proxy = 'http://cors-anywhere.herokuapp.com/';
+            proxy = "https://cors-anywhere.herokuapp.com/";
             const api = `${proxy}https://api.darksky.net/forecast/32ba56ee9febcd65150fb798a301ea31/${lat},${long}`;
 
             fetch(api)
